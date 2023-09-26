@@ -17,16 +17,40 @@ $(document).ready(function () {
 
     apiStatus();
 
+    // Function to create an article element for a place
+    // !== 1 ? 's' : '' check if place.x is not equal to 1. If not, it adds an "s" to the end of the word
+    function createArticle(place) {
+        article = `
+            <article>
+                <div class="title_box">
+                    <h2>${place.name}</h2>
+                    <div class="price_by_night">$${place.price_by_night}</div>
+                </div>
+                <div class="information">
+                    <div class="max_guest">${place.max_guest} Guest${place.max_guest !== 1 ? 's' : ''}</div>
+                    <div class="number_rooms">${place.number_rooms} Bedroom${place.number_rooms !== 1 ? 's' : ''}</div>
+                    <div class="number_bathrooms">${place.number_bathrooms} Bathroom${place.number_bathrooms !== 1 ? 's' : ''}</div>
+                </div>
+                <div class="description">
+                    ${place.description}
+                </div>
+            </article>
+        `;
+        return article;
+    }
+
     function postRequest() {
         $.ajax({
             type: 'POST',
             url: 'http://0.0.0.0:5001/api/v1/places_search/',
-            contentType: "application / json",
-            data: '{}',
-            success: function (places) {
-                $.each(places, function (i, place) {
-                    $('section.places').append('<article>' + place + '</article>');
-                });
+            contentType: "application/json",
+            data: JSON.stringify({}),
+            success: function (data) {
+                for (place of data) {
+                    article = createArticle(place);
+                    $('.places').append(article);
+                }
+                console.log("Success")
             }
         });
     }
