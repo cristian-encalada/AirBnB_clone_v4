@@ -44,8 +44,9 @@ $(document).ready(function () {
           type: 'POST',
           url: 'http://0.0.0.0:5001/api/v1/places_search/',
           contentType: "application/json",
-          data: JSON.stringify({}),
+          data: JSON.stringify({ amenities: checkedAmenities }),
           success: function (data) {
+              $('.places').empty(); // Clear existing results
               for (place of data) {
                   article = createArticle(place);
                   $('.places').append(article);
@@ -56,6 +57,12 @@ $(document).ready(function () {
   }
 
   postRequest();
+
+
+  // Event listener for the "Search" button
+  $('button[type="button"]').click(function () {
+    postRequest();
+  });
 
   // Select all amenity input checkboxes
   $('.amenities input[type="checkbox"]').change(function () {
