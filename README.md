@@ -42,7 +42,7 @@ In this stage, the main objectives are:
 7.  [API Usage](#api-usage)
 8.  [Unit tests](#unit-tests)
 9.  [Authors](#authors)
-10.  [License](#license)
+10. [License](#license)
 
 ## Development Environment
 
@@ -291,13 +291,18 @@ service mysql start
 ```
 1. Make sure that the user root, password root exist
 
-2. Install Flask
+2. Install Flask: [Flask](https://pypi.org/project/Flask/)
 ```sh
-pip3 install Flask
+sudo pip install Flask
 ```
 3. Install the FLask version of Swagger: [Flasgger](https://github.com/flasgger/flasgger)
 ```sh
-pip3 install flasgger
+sudo pip install flasgger
+```
+
+3. Install the FLask Cors: [Flasgger](https://pypi.org/project/Flask-Cors/)
+```sh
+sudo pip install Flask-Cors
 ```
 
 ### Data Set Up
@@ -367,9 +372,9 @@ Press CTRL+C to quit
 
 ## API usage
 
-1. Open this URL in the web browser::
+1. Open this URL in the web browser:
 ```
-http://0.0.0.0:5000/apidocs/#/
+http://0.0.0.0:5001/apidocs/#/
 ```
 
 2. From here, you can test all API endpoints through the __Swagger__ interface:
