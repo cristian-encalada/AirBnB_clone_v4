@@ -1,8 +1,8 @@
-$(document).ready(function() {
+$(document).ready(function () {
   let checkedAmenities = [];
 
   // Select all amenity input checkboxes
-  $('.amenities input[type="checkbox"]').change(function() {
+  $('.amenities input[type="checkbox"]').change(function () {
     const amenityId = $(this).data('id');
     const amenityName = $(this).data('name');
 
@@ -11,13 +11,13 @@ $(document).ready(function() {
       checkedAmenities.push({ data_amenity_id: amenityId, data_amenity_name: amenityName });
     } else {
       // If unchecked, remove the amenity that matches the Id
-      checkedAmenities = checkedAmenities.filter(function(amenity) {
+      checkedAmenities = checkedAmenities.filter(function (amenity) {
         return amenity.data_amenity_id !== amenityId;
       });
     }
 
     // Update the <h4> tag with the list of amenities
-    const amenitiesList = checkedAmenities.map(function(amenity) {
+    const amenitiesList = checkedAmenities.map(function (amenity) {
       return amenity.data_amenity_name;
     }).join(', ');
 
