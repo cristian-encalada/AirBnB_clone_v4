@@ -55,8 +55,7 @@ $(document).ready(function () {
   });
 
   // Select all state input checkboxes
-  $('.locations input[type="checkbox"]').change(function () {
-    // console.log('State checkbox changed');
+  $('.state-checkbox').change(function () {
     const stateId = $(this).data('id');
     const stateName = $(this).data('name');
 
@@ -68,50 +67,15 @@ $(document).ready(function () {
     // Verify if the checkbox is checked or not
     if ($(this).is(':checked')) {
       if (!existingState) {
-        // Push the state object if it doesn't exist in the array
+      // Push the state object if it doesn't exist in the array
         checkedStates.push({ id: stateId, name: stateName });
       }
     } else {
-      // If unchecked, remove the state object that matches the Id
+    // If unchecked, remove the state object that matches the Id
       checkedStates = checkedStates.filter(function (state) {
         return state.id !== stateId;
       });
     }
-
-    // Select all city input checkboxes
-    $('.locations ul li input[type="checkbox"]').change(function () {
-      // console.log('City checkbox changed');
-      const cityId = $(this).data('id');
-      const cityName = $(this).data('name');
-
-      // Find if the city object is already in checkedCities
-      const existingCity = checkedCities.find(function (city) {
-        return city.id === cityId;
-      });
-
-      // Verify if the checkbox is checked or not
-      if ($(this).is(':checked')) {
-        if (!existingCity) {
-          // Push the city object if it doesn't exist in the array
-          checkedCities.push({ id: cityId, name: cityName });
-        }
-      } else {
-        // If unchecked, remove the city object that matches the Id
-        checkedCities = checkedCities.filter(function (city) {
-          return city.id !== cityId;
-        });
-      }
-
-      // Update the <h4> tag with the list of city names
-      const citiesList = checkedCities.map(function (city) {
-        return city.name;
-      }).join(', ');
-
-      $('.locations h4').text('Cities: ' + citiesList);
-
-      // Check the state of checkedCities
-      console.log('Checked Cities:', checkedCities);
-    });
 
     // Update the <h4> tag with the list of state names
     const statesList = checkedStates.map(function (state) {
@@ -122,6 +86,41 @@ $(document).ready(function () {
 
     // Check the state of checkedStates
     console.log('Checked States:', checkedStates);
+  });
+
+  // Select all city input checkboxes
+  $('.city-checkbox').change(function () {
+  // console.log('City checkbox changed');
+    const cityId = $(this).data('id');
+    const cityName = $(this).data('name');
+
+    // Find if the city object is already in checkedCities
+    const existingCity = checkedCities.find(function (city) {
+      return city.id === cityId;
+    });
+
+    // Verify if the checkbox is checked or not
+    if ($(this).is(':checked')) {
+      if (!existingCity) {
+      // Push the city object if it doesn't exist in the array
+        checkedCities.push({ id: cityId, name: cityName });
+      }
+    } else {
+    // If unchecked, remove the city object that matches the Id
+      checkedCities = checkedCities.filter(function (city) {
+        return city.id !== cityId;
+      });
+    }
+
+    // Update the <h4> tag with the list of city names
+    const citiesList = checkedCities.map(function (city) {
+      return city.name;
+    }).join(', ');
+
+    $('.locations h4').text('Cities: ' + citiesList);
+
+    // Check the state of checkedCities
+    console.log('Checked Cities:', checkedCities);
   });
 
   // Auxiliar function to create an article element tag for a place
