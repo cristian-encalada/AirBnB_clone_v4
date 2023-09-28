@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    // console.log('Document ready function executed');
     let checkedAmenities = [];
     let checkedStates = [];
   
@@ -53,13 +54,14 @@ $(document).ready(function () {
     });
 
     // Select all state input checkboxes
-    $('.locations h2 input[type="checkbox"]').change(function () {
+    $('.locations input[type="checkbox"]').change(function () {
+        console.log('State checkbox changed'); 
         const stateId = $(this).data('id');
         const stateName = $(this).data('name');
     
         // Find if the state object is already in checkedStates
         const existingState = checkedStates.find(function (state) {
-          return state.id === stateId;
+         return state.id === stateId;
         });
     
         // Verify if the checkbox is checked or not
@@ -118,19 +120,31 @@ $(document).ready(function () {
       const stateIds = checkedStates.map(function (state) {
         return state.id;
       });
+
+      // Create a data object to send in the request
+      const requestData = {
+        amenities: amenityIds,
+        states: stateIds,
+      };
+
+      // Check if both amenities and states arrays are empty
+      if (!requestData.amenities.length && !requestData.states.length) {
+        // If both are empty, send an empty object to retrieve all places
+        requestData.amenities = requestData.states = {};
+      }
   
       $.ajax({
         type: 'POST',
         url: 'http://0.0.0.0:5001/api/v1/places_search/',
         contentType: 'application/json',
-        data: JSON.stringify({ amenities: amenityIds, states: stateIds }), // Send only the IDs
+        data: JSON.stringify(requestData),
         success: function (data) {
           $('.places').empty(); // Clear existing results
           for (const place of data) {
             const article = createArticle(place);
             $('.places').append(article);
           }
-          console.log('Success');
+          console.log('Post request done successfully');
         }
       });
     }
