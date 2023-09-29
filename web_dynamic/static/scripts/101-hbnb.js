@@ -123,49 +123,85 @@ $(document).ready(function () {
     console.log('Checked Cities:', checkedCities);
   });
 
-
   // Retrieve and append reviews to each article
-function getReviews(placeId, articleElement) {
-  $.ajax({
-    type: 'GET',
-    url: `http://127.0.0.1:5001/api/v1/places/${placeId}/reviews`,
-    success: function (reviews) {
-      const reviewsContainer = articleElement.find('.reviews');
-      reviewsContainer.empty(); // Clear existing reviews
+  function getReviews (placeId, articleElement) {
+    console.log('Clicked on "Show" button');
+    $.ajax({
+      type: 'GET',
+      url: `http://127.0.0.1:5001/api/v1/places/${placeId}/reviews`,
+      success: function (reviews) {
+        console.log('Reviews data:', reviews);
+        const reviewsDiv = articleElement.find('.reviews');
+        reviewsDiv.empty(); // Clear existing reviews
 
-      for (const review of reviews) {
+        for (const review of reviews) {
         // Create a review and append it to the reviews div
-        const reviewElement = `<p>${review.text}</p>`;
-        reviewsContainer.append(reviewElement);
+          const reviewElement = `<p>${review.text}</p>`;
+          reviewsDiv.append(reviewElement);
+        }
       }
-    },
+    });
+  }
+
+  // Function for the reviews visibility
+  function reviewsVisibility (reviewsDiv, showHideButton) {
+    // Hide reviews by default
+    reviewsDiv.hide();
+
+    showHideButton.click(function () {
+      if (showHideButton.text() === 'Show') {
+        // Show reviews
+        showHideButton.text('Hide');
+        reviewsDiv.slideDown();
+      } else {
+        // Hide reviews
+        showHideButton.text('Show');
+        reviewsDiv.slideUp();
+      }
+    });
+  }
+
+  // Event delegation for show/hide reviews
+  $('.places').on('click', '.span-reviews', function () {
+    const reviewsDiv = $(this).closest('.reviews').find('.reviews-div');
+    if ($(this).text() === 'Show') {
+      getReviews($(this).data('place-id'), $(this).closest('article'));
+    }
+    reviewsVisibility(reviewsDiv, $(this));
   });
-}
+
 
   // Auxiliar function to create an article element tag for a place
   // !== 1 ? 's' : '' check if place.x is not equal to 1. If not, it adds an "s" to the end of the word
-  function createArticle (place) {
-    const article = `
-            <article>
-                <div class="title_box">
-                    <h2>${place.name}</h2>
-                    <div class="price_by_night">$${place.price_by_night}</div>
-                </div>
-                <div class="information">
-                    <div class="max_guest">${place.max_guest} Guest${place.max_guest !== 1 ? 's' : ''}</div>
-                    <div class="number_rooms">${place.number_rooms} Bedroom${place.number_rooms !== 1 ? 's' : ''}</div>
-                    <div class="number_bathrooms">${place.number_bathrooms} Bathroom${place.number_bathrooms !== 1 ? 's' : ''}</div>
-                </div>
-                <div class="description">
-                    ${place.description}
-                </div>
-                <div class="reviews">
-                Reviews
-                </div>
-            </article>
-        `;
-    return article;
-  }
+function createArticle(place) {
+  const article = `
+    <article>
+      <div class="title_box">
+        <h2>${place.name}</h2>
+        <div class="price_by_night">$${place.price_by_night}</div>
+      </div>
+      <div class="information">
+        <div class="max_guest">${place.max_guest} Guest${place.max_guest !== 1 ? 's' : ''}</div>
+        <div class="number_rooms">${place.number_rooms} Bedroom${place.number_rooms !== 1 ? 's' : ''}</div>
+        <div class="number_bathrooms">${place.number_bathrooms} Bathroom${place.number_bathrooms !== 1 ? 's' : ''}</div>
+      </div>
+      <div class="description">
+        ${place.description}
+      </div>
+      <div class="reviews">
+        <h2>
+          Reviews:
+          <span class="span-reviews" data-place-id="${place.id}">Show</span>
+        </h2>
+        <div class="reviews-div">
+          <!-- Reviews will be appended here -->
+        </div>
+      </div>
+    </article>
+  `;
+
+  return article;
+}
 
   function postRequest () {
     // Extract just the amenity IDs from checkedAmenities
@@ -207,8 +243,6 @@ function getReviews(placeId, articleElement) {
           const article = createArticle(place);
           const mainArticle = $(article);
           $('.places').append(mainArticle);
-          // Append the reviews for the place
-          getReviews(place.id, mainArticle);
         }
         console.log('Post request done successfully');
       }
