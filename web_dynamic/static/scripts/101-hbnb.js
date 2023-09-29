@@ -123,6 +123,25 @@ $(document).ready(function () {
     console.log('Checked Cities:', checkedCities);
   });
 
+
+  // Retrieve and append reviews to each article
+function getReviews(placeId, articleElement) {
+  $.ajax({
+    type: 'GET',
+    url: `http://127.0.0.1:5001/api/v1/places/${placeId}/reviews`,
+    success: function (reviews) {
+      const reviewsContainer = articleElement.find('.reviews');
+      reviewsContainer.empty(); // Clear existing reviews
+
+      for (const review of reviews) {
+        // Create a review and append it to the reviews div
+        const reviewElement = `<p>${review.text}</p>`;
+        reviewsContainer.append(reviewElement);
+      }
+    },
+  });
+}
+
   // Auxiliar function to create an article element tag for a place
   // !== 1 ? 's' : '' check if place.x is not equal to 1. If not, it adds an "s" to the end of the word
   function createArticle (place) {
@@ -139,6 +158,9 @@ $(document).ready(function () {
                 </div>
                 <div class="description">
                     ${place.description}
+                </div>
+                <div class="reviews">
+                Reviews
                 </div>
             </article>
         `;
@@ -183,7 +205,10 @@ $(document).ready(function () {
         $('.places').empty(); // Clear existing results
         for (const place of data) {
           const article = createArticle(place);
-          $('.places').append(article);
+          const mainArticle = $(article);
+          $('.places').append(mainArticle);
+          // Append the reviews for the place
+          getReviews(place.id, mainArticle);
         }
         console.log('Post request done successfully');
       }
