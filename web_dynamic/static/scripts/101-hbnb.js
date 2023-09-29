@@ -170,11 +170,10 @@ $(document).ready(function () {
     reviewsVisibility(reviewsDiv, $(this));
   });
 
-
   // Auxiliar function to create an article element tag for a place
   // !== 1 ? 's' : '' check if place.x is not equal to 1. If not, it adds an "s" to the end of the word
-function createArticle(place) {
-  const article = `
+  function createArticle (place) {
+    const article = `
     <article>
       <div class="title_box">
         <h2>${place.name}</h2>
@@ -200,8 +199,8 @@ function createArticle(place) {
     </article>
   `;
 
-  return article;
-}
+    return article;
+  }
 
   function postRequest () {
     // Extract just the amenity IDs from checkedAmenities
